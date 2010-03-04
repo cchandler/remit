@@ -99,37 +99,17 @@ module Remit
       super(sandbox ? API_SANDBOX_ENDPOINT : API_ENDPOINT)
     end
 
+    private
+
     def new_query(query={})
       SignedQuery.new(@endpoint, @secret_key, query)
     end
-    private :new_query
 
     def default_query
       new_query({
         :AWSAccessKeyId => @access_key,
-        :SignatureVersion => SIGNATURE_VERSION,
-        :Version => API_VERSION,
         :Timestamp => Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
       })
     end
-    private :default_query
-
-    def query(request)
-      query = super
-      query[:Signature] = sign(query)
-      query
-    end
-    private :query
-
-    def sign(values)
-      keys = values.keys.sort { |a, b| a.to_s.downcase <=> b.to_s.downcase }
-
-      signature = keys.inject('') do |signature, key|
-        signature += key.to_s + values[key].to_s
-      end
-
-      Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest::SHA1.new, @secret_key, signature)).strip
-    end
-    private :sign
   end
 end

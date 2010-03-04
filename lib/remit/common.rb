@@ -56,20 +56,42 @@ module Remit
   end
 
   class SignedQuery < Relax::Query
+    API_VERSION = '2009-01-09'.freeze
+    SIGNATURE_VERSION = 2.freeze
+    SIGNATURE_METHOD = 'HmacSHA256'.freeze
+
     def initialize(uri, secret_key, query={})
       super(query)
       @uri = URI.parse(uri.to_s)
       @secret_key = secret_key
     end
 
-    def sign
-      delete(:awsSignature)
-      store(:awsSignature, Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest::SHA1.new, @secret_key, "#{@uri.path}?#{to_s(false)}".gsub('%20', '+'))).strip)
+    def to_s(http_method='GET')
+      sign(http_method) if http_method
+      super()
     end
 
-    def to_s(signed=true)
-      sign if signed
-      super()
+    private
+
+    def sign(http_method)
+      # exclude this from the new signature if it's already set
+      delete :Signature
+
+      self[:Version] = API_VERSION
+      self[:SignatureVersion] = SIGNATURE_VERSION
+      self[:SignatureMethod] = SIGNATURE_METHOD
+      self[:Signature] = compute_signature(http_method)
+    end
+
+    def compute_signature(http_method)
+      method = http_method.to_s.upcase
+      host = @uri.host
+      path = @uri.request_uri
+      encoded_data = to_s(nil).gsub(/\+/, '%20')
+
+      data = "#{http_method}\n#{host}\n#{path}\n#{encoded_data}"
+      digest = OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, @secret_key, data)
+      Base64.encode64(digest).strip
     end
 
     class << self
