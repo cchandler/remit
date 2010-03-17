@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Tyler Hunt"]
-  s.date = %q{2010-01-11}
+  s.date = %q{2010-03-16}
   s.email = %q{tyler@tylerhunt.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
      "lib/remit/operations/settle_debt.rb",
      "lib/remit/operations/subscribe_for_caller_notification.rb",
      "lib/remit/operations/unsubscribe_for_caller_notification.rb",
+     "lib/remit/operations/verify_signature.rb",
      "lib/remit/operations/write_off_debt.rb",
      "lib/remit/pipeline_response.rb"
   ]
@@ -56,7 +57,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{remit}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{An API for using the Amazon Flexible Payment Service (FPS).}
   s.test_files = [
     "spec/integrations/get_account_activity_spec.rb",

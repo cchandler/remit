@@ -46,6 +46,7 @@ require 'remit/operations/settle'
 require 'remit/operations/settle_debt'
 require 'remit/operations/subscribe_for_caller_notification'
 require 'remit/operations/unsubscribe_for_caller_notification'
+require 'remit/operations/verify_signature'
 require 'remit/operations/write_off_debt'
 
 module Remit
@@ -78,6 +79,7 @@ module Remit
     include SettleDebt
     include SubscribeForCallerNotification
     include UnsubscribeForCallerNotification
+    include VerifySignature
     include WriteOffDebt
 
     API_ENDPOINT = 'https://fps.amazonaws.com/'.freeze
